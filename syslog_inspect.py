@@ -26,6 +26,9 @@ data = {
     "error_count": error_count
 }
 
+print("Remote script output:", output)
+print("Extracted remote_filename:", remote_filename)
+
 output_folder = "json_results"
 os.makedirs(output_folder, exist_ok=True)
 
