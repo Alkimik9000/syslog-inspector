@@ -1,3 +1,4 @@
+from config import REMOTE_JSON_FOLDER
 import subprocess
 import json
 import os
@@ -28,7 +29,7 @@ data = {
 output_folder = "json_results"
 os.makedirs(output_folder, exist_ok=True)
 
-json_filename = output_folder + "/results-" + server_timestamp + ".json"
+json_filename = REMOTE_JSON_FOLDER + "/results-" + str(server_timestamp) + ".json"
 
 
 with open(json_filename, "w") as json_file:

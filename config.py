@@ -7,10 +7,8 @@ PEM_FILE_PATH = secrets["PEM_FILE_PATH"]
 HOST = secrets["HOST"]
 USERNAME = secrets["USERNAME"]
 
-# Local folders
 LOCAL_JSON_FOLDER = "json_results"
 LOCAL_CSV_FILE = "results.csv"
 
-# Remote folders
 REMOTE_JSON_FOLDER = "json_results"
 REMOTE_PYTHON_SCRIPT = "inspect_syslog_server_side.py"

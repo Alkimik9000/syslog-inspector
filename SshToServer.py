@@ -1,12 +1,12 @@
 import paramiko
 import time
-
+from config import PEM_FILE_PATH, HOST, USERNAME
 
 class SshToServer:
-    def __init__(self, pem_file_path, host, username):
-        self.pem_file_path = pem_file_path
-        self.host = host
-        self.username = username
+    def __init__(self):
+        self.pem_file_path = PEM_FILE_PATH
+        self.host = HOST
+        self.username = USERNAME
         self.sshClient = paramiko.SSHClient()
         self.connect()
         self.shell = self.sshClient.invoke_shell()

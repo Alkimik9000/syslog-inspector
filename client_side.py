@@ -1,4 +1,5 @@
 from SshToServer import SshToServer
+from config import REMOTE_PYTHON_SCRIPT, REMOTE_JSON_FOLDER
 import subprocess
 import pandas as pd
 import json
@@ -13,14 +14,15 @@ def append_to_csv(file_path, row_data):
         df_combined = df_new
     df_combined.to_csv(file_path, index=False)
 
-my_ssh = SshToServer("/Users/markofir/Downloads/key-pair.pem", "51.20.1.114", "ubuntu")
-output = my_ssh.runShellCommand("python3 inspect_syslog_server_side.py")
+my_ssh = SshToServer()
+output = my_ssh.runShellCommand("python3 " + REMOTE_PYTHON_SCRIPT)
 
 
 lines = output.strip().split('\n')
 remote_filename = lines[-2].strip()
 
-os.makedirs(local_json_folder, exist_ok=True)
+os.makedirs(REMOTE_JSON_FOLDER, exist_ok=True)
+
 
 
 
