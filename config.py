@@ -11,4 +11,4 @@ LOCAL_JSON_FOLDER = "json_results"
 LOCAL_CSV_FILE = "results.csv"
 
 REMOTE_JSON_FOLDER = "json_results"
-REMOTE_PYTHON_SCRIPT = "inspect_syslog_server_side.py"
+REMOTE_PYTHON_SCRIPT = "inspect_syslogsys_server_side.py"
