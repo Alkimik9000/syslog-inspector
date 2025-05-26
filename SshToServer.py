@@ -23,6 +23,10 @@ class SshToServer:
         while self.shell.recv_ready():
             output += self.shell.recv(4096).decode()
         return output
+    
+    def getSftpConnection(self):
+        """Return an SFTP client connection using the existing SSH client."""
+        return self.sshClient.open_sftp()
 
     def close(self):
         self.shell.close()
