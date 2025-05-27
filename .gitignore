@@ -1,15 +1,12 @@
 # Ignore system and macOS files
 .DS_Store
 
-
 Archive/
-
 
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
 
 venv/
 env/
@@ -17,3 +14,7 @@ myvenv/
 
 secrets.json
 *.pem
+
+json_results/
+results.csv
+client_side copy.py

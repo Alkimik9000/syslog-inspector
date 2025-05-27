@@ -3,7 +3,7 @@ import json
 with open("secrets.json") as f: 
     secrets = json.load(f)
 
-PEM_FILE_PATH = secrets["PEM_FILE_PATH"]
+PEM_FILE_PATH: str = secrets["PEM_FILE_PATH"]
 HOST = secrets["HOST"]
 USERNAME = secrets["USERNAME"]
 
