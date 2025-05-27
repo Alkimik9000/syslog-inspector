@@ -7,7 +7,7 @@ import time
 import pandas as pd
 
 from config import REMOTE_PYTHON_SCRIPT, LOCAL_JSON_FOLDER, LOCAL_CSV_FILE, USERNAME, HOST, PEM_FILE_PATH
-from SshToServer import SshToServer
+from ssh_to_server import SshToServer
 
 
 def appendToCSV(file_path, row_data):

@@ -7,17 +7,17 @@ class SshToServer:
         self.pem_file_path: str = PEM_FILE_PATH
         self.host = HOST
         self.username = USERNAME
-        self.sshClient = paramiko.SSHClient()
+        self.ssh_client = paramiko.SSHClient()
         self.connect()
 
     def connect(self):
-        self.sshClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         private_key = paramiko.RSAKey.from_private_key_file(self.pem_file_path)
-        self.sshClient.connect(hostname=self.host, username=self.username, pkey=private_key)
+        self.ssh_client.connect(hostname=self.host, username=self.username, pkey=private_key)
 
     def execCommand(self, command):
         # Execute command for remote operations
-        _, stdout, stderr = self.sshClient.exec_command(command)
+        _, stdout, stderr = self.ssh_client.exec_command(command)
         output = stdout.read().decode()
         error = stderr.read().decode()
         if error:
@@ -25,4 +25,4 @@ class SshToServer:
         return output
 
     def close(self):
-        self.sshClient.close()
+        self.ssh_client.close()
