@@ -32,7 +32,6 @@ local_filename = os.path.abspath(os.path.join(LOCAL_JSON_FOLDER, os.path.basenam
 remote_path = USERNAME + "@" + HOST + ":" + remote_filename
 scp_command = ["scp", "-i", PEM_FILE_PATH, remote_path, local_filename]
 
-
 try:
     subprocess.run(scp_command, check=True)
 except subprocess.CalledProcessError as e:
