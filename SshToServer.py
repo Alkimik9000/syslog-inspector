@@ -1,4 +1,5 @@
 import paramiko
+
 from config import PEM_FILE_PATH, HOST, USERNAME
 
 class SshToServer:
@@ -15,6 +16,7 @@ class SshToServer:
         self.sshClient.connect(hostname=self.host, username=self.username, pkey=private_key)
 
     def execCommand(self, command):
+        # Execute command for remote operations
         _, stdout, stderr = self.sshClient.exec_command(command)
         output = stdout.read().decode()
         error = stderr.read().decode()

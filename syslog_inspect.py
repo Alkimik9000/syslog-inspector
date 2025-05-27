@@ -1,20 +1,20 @@
-from config import REMOTE_JSON_FOLDER
-import subprocess
 import json
 import os
+import subprocess
 
-def run_local_command(command):
+from config import REMOTE_JSON_FOLDER
+
+def runLocalCommand(command):
     try:
-        result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        return result.stdout.strip()
+        subprocess.run(command, shell=True, check=True)
     except subprocess.CalledProcessError as e:
-        print("Command '" + command + "' returned non-zero exit status " + str(e.returncode))
-        print("Error output: " + e.stderr)
+        print("Command failed: " + command + " (exit code " + str(e.returncode) + ")")
 
-server_timestamp = run_local_command("date +%s")
-info_count = run_local_command("less /var/log/syslog | grep -i  'info' | wc -l")
-warn_count = run_local_command("less /var/log/syslog | grep -i  'warn' | wc -l")
-error_count = run_local_command("less /var/log/syslog | grep -i  'error' | wc -l")
+# Collect system log metrics for analysis
+server_timestamp = runLocalCommand("date +%s")
+info_count = runLocalCommand("less /var/log/syslog | grep -i  'info' | wc -l")
+warn_count = runLocalCommand("less /var/log/syslog | grep -i  'warn' | wc -l")
+error_count = runLocalCommand("less /var/log/syslog | grep -i  'error' | wc -l")
 
 data = {
     "server_timestamp": server_timestamp,
@@ -24,7 +24,6 @@ data = {
 }
 
 os.makedirs(REMOTE_JSON_FOLDER, exist_ok=True)
-
 json_filename = os.path.join(REMOTE_JSON_FOLDER, "results-" + str(server_timestamp) + ".json")
 
 with open(json_filename, "w") as json_file:
@@ -33,6 +32,7 @@ with open(json_filename, "w") as json_file:
 try:
     with open(json_filename, "w") as json_file:
         json.dump(data, json_file, indent=4)
-    print(json_filename) 
+    print("Generated JSON file: " + json_filename) 
 except Exception as e:
-    print(f"Error writing file: {e}")
+    print("Failed to write JSON file: " + str(e))
+    raise
