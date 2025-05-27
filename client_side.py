@@ -1,5 +1,5 @@
 from SshToServer import SshToServer
-from config import REMOTE_PYTHON_SCRIPT, LOCAL_JSON_FOLDER, LOCAL_CSV_FILE, REMOTE_JSON_FOLDER, USERNAME, HOST, PEM_FILE_PATH
+from config import REMOTE_PYTHON_SCRIPT, LOCAL_JSON_FOLDER, LOCAL_CSV_FILE, USERNAME, HOST, PEM_FILE_PATH
 import pandas as pd
 import subprocess
 import json
@@ -19,21 +19,19 @@ print("About to attempt to connect to remote server using SSH")
 my_ssh = SshToServer()
 print("Connections to Remote Server Succeeded")
 
-# Create json file remotely and Extract the remote filename and path
+# Create json file remotely and fetch the remote filename, and pull the file to the local machine using scp
 output = my_ssh.execCommand("python3 " + REMOTE_PYTHON_SCRIPT)
 lines = [line.strip() for line in output.split('\n') if line.strip()]
 remote_filename = lines[-1]
-
-os.makedirs(LOCAL_JSON_FOLDER, exist_ok=True)
-
-local_filename = os.path.abspath(os.path.join(LOCAL_JSON_FOLDER, os.path.basename(remote_filename)))
 
 print("Waiting for file to be written on server")
 time.sleep(3)
 
 print("Fetching file using scp")
+local_filename = os.path.abspath(os.path.join(LOCAL_JSON_FOLDER, os.path.basename(remote_filename)))
 remote_path = USERNAME + "@" + HOST + ":" + remote_filename
 scp_command = ["scp", "-i", PEM_FILE_PATH, remote_path, local_filename]
+
 
 try:
     subprocess.run(scp_command, check=True)
@@ -42,9 +40,10 @@ except subprocess.CalledProcessError as e:
     raise
 
 print("Extracting data from JSON and writing it to results.csv databae")
+os.makedirs(LOCAL_JSON_FOLDER, exist_ok=True)
 with open(local_filename, 'r') as f:
     data = json.load(f)
 append_to_csv(LOCAL_CSV_FILE, data)
 
 my_ssh.close()
-print("Processing complete")
+print("Process completet")
