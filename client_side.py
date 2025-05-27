@@ -1,10 +1,12 @@
-from SshToServer import SshToServer
-from config import REMOTE_PYTHON_SCRIPT, LOCAL_JSON_FOLDER, LOCAL_CSV_FILE, USERNAME, HOST, PEM_FILE_PATH
-import pandas as pd
+
 import subprocess
 import json
 import os
 import time
+import pandas as pd
+from SshToServer import SshToServer
+from config import REMOTE_PYTHON_SCRIPT, LOCAL_JSON_FOLDER, LOCAL_CSV_FILE, USERNAME, HOST, PEM_FILE_PATH
+
 
 def append_to_csv(file_path, row_data):
     df_new = pd.DataFrame([row_data])
