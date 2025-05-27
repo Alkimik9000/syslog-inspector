@@ -3,12 +3,14 @@ import subprocess
 import json
 import os
 import time
+
 import pandas as pd
-from SshToServer import SshToServer
+
 from config import REMOTE_PYTHON_SCRIPT, LOCAL_JSON_FOLDER, LOCAL_CSV_FILE, USERNAME, HOST, PEM_FILE_PATH
+from SshToServer import SshToServer
 
 
-def append_to_csv(file_path, row_data):
+def appendToCSV(file_path, row_data):
     df_new = pd.DataFrame([row_data])
     if os.path.isfile(file_path):
         df_existing = pd.read_csv(file_path)
@@ -17,19 +19,19 @@ def append_to_csv(file_path, row_data):
         df_combined = df_new
     df_combined.to_csv(file_path, index=False)
 
-print("About to attempt to connect to remote server using SSH")
+print("Connecting to remote server...")
 my_ssh = SshToServer()
-print("Connections to Remote Server Succeeded")
+print("Connected to remote server")
 
-# Create json file remotely and fetch the remote filename, and pull the file to the local machine using scp
+# Run remote script to generate JSON file for log analysis
 output = my_ssh.execCommand("python3 " + REMOTE_PYTHON_SCRIPT)
 lines = [line.strip() for line in output.split('\n') if line.strip()]
 remote_filename = lines[-1]
 
-print("Waiting for file to be written on server")
+print("Waiting for file creation on server...")
 time.sleep(3)
 
-print("Fetching file using scp")
+print("Copying file from server: " + remote_filename)
 local_filename = os.path.abspath(os.path.join(LOCAL_JSON_FOLDER, os.path.basename(remote_filename)))
 remote_path = USERNAME + "@" + HOST + ":" + remote_filename
 scp_command = ["scp", "-i", PEM_FILE_PATH, remote_path, local_filename]
@@ -40,11 +42,11 @@ except subprocess.CalledProcessError as e:
     print("scp failed:", e)
     raise
 
-print("Extracting data from JSON and writing it to results.csv databae")
+print("Processing " + os.path.basename(local_filename) + " and appending to " + LOCAL_CSV_FILE)
 os.makedirs(LOCAL_JSON_FOLDER, exist_ok=True)
 with open(local_filename, 'r') as f:
     data = json.load(f)
-append_to_csv(LOCAL_CSV_FILE, data)
+appendToCSV(LOCAL_CSV_FILE, data)
 
 my_ssh.close()
-print("Process completet")
+print("Process completed")
