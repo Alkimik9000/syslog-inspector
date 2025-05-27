@@ -7,7 +7,6 @@ def run_local_command(command):
     try:
         result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         return result.stdout.strip()
-
     except subprocess.CalledProcessError as e:
         print("Command '" + command + "' returned non-zero exit status " + str(e.returncode))
         print("Error output: " + e.stderr)
@@ -23,6 +22,7 @@ data = {
     "warn_count": warn_count,
     "error_count": error_count
 }
+
 os.makedirs(REMOTE_JSON_FOLDER, exist_ok=True)
 
 json_filename = os.path.join(REMOTE_JSON_FOLDER, "results-" + str(server_timestamp) + ".json")
@@ -33,6 +33,6 @@ with open(json_filename, "w") as json_file:
 try:
     with open(json_filename, "w") as json_file:
         json.dump(data, json_file, indent=4)
-    print(json_filename)  # Absolute path only
+    print(json_filename) 
 except Exception as e:
     print(f"Error writing file: {e}")
