@@ -1,5 +1,6 @@
 import json
 import subprocess
+import re 
 
 data = {
     "server_timestamp": subprocess.check_output(["date", "+%s"]).decode().strip(),    
@@ -11,12 +12,12 @@ data = {
 with open("/var/log/syslog", "r") as file:
     line = file.readline()
     while line:
-        line_lower = line.lower()
-        if "info" in line_lower:
+        lower_cased_line = line.lower()
+        if re.search(r'\binfo\b', lower_cased_line):
             data["info_count"] += 1
-        if "warn" in line_lower:
+        if re.search(r'\bwarn\b|\bwarning\b', lower_cased_line):  # Matches "warn" or "warning"
             data["warn_count"] += 1
-        if "error" in line_lower:
+        if re.search(r'\berror\b', lower_cased_line):
             data["error_count"] += 1
         line = file.readline()
 
