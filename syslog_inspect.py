@@ -10,8 +10,13 @@ def runLocalCommand(command):
     except subprocess.CalledProcessError as e:
         print("Command failed: " + command + " (exit code " + str(e.returncode) + ")")
 
-# Collect system log metrics for analysis
-server_timestamp = runLocalCommand("date +%s")
+server_timestamp = os.popen("date +%s").read().strip()
+if not server_timestamp:
+    print("Failed to capture timestamp")
+    exit(1)
+
+print(server_timestamp)
+
 info_count = runLocalCommand("less /var/log/syslog | grep -i  'info' | wc -l")
 warn_count = runLocalCommand("less /var/log/syslog | grep -i  'warn' | wc -l")
 error_count = runLocalCommand("less /var/log/syslog | grep -i  'error' | wc -l")
@@ -22,6 +27,8 @@ data = {
     "warn_count": warn_count,
     "error_count": error_count
 }
+
+# Collect system log metrics for analysis
 
 os.makedirs(REMOTE_JSON_FOLDER, exist_ok=True)
 json_filename = os.path.join(REMOTE_JSON_FOLDER, "results-" + str(server_timestamp) + ".json")
