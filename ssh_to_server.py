@@ -16,7 +16,6 @@ class SshToServer:
         self.ssh_client.connect(hostname=self.host, username=self.username, pkey=private_key)
 
     def execCommand(self, command):
-        # Execute command for remote operations
         _, stdout, stderr = self.ssh_client.exec_command(command)
         output = stdout.read().decode()
         error = stderr.read().decode()
