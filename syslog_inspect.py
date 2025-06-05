@@ -15,7 +15,7 @@ with open("/var/log/syslog", "r") as file:
         lower_cased_line = line.lower()
         if re.search(r'\binfo\b', lower_cased_line):
             data["info_count"] += 1
-        if re.search(r'\bwarn\b|\bwarning\b', lower_cased_line):  # Matches "warn" or "warning"
+        if re.search(r'\bwarn\b|\bwarning\b', lower_cased_line):
             data["warn_count"] += 1
         if re.search(r'\berror\b', lower_cased_line):
             data["error_count"] += 1
