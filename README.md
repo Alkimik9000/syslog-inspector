@@ -1,6 +1,6 @@
 EC2 Syslog Inspector
 
-This project connects from your local machine (Mac) to an EC2 Ubuntu server, runs a Python script remotely that inspects the server’s syslog, counts:
+This project connects from your local machine to an EC2 Ubuntu server, runs a Python script remotely that inspects the server’s syslog, counts:
 
 number of INFO
 number of WARN
