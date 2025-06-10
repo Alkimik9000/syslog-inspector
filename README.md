@@ -1,4 +1,5 @@
 EC2 Syslog Inspector
+<<<<<<< HEAD
 This project connects from your local machine (Mac) to an EC2 Ubuntu server, runs a Python script remotely that inspects the server’s syslog, counts:
 
 number of INFO
@@ -35,5 +36,4 @@ HOST
 USERNAME
 
 IMPORTANT:
-There’s a secrets.json file in the repo (dummy version). You must replace it with your real values.
-
+There’s a secrets.json file in the repo (dummy version). You must fill it with your real values.
