@@ -1,7 +1,6 @@
 import json
 import os
 
-# Load sensitive credentials from secrets.json for secure SSH access
 with open(os.path.join(os.path.dirname(__file__), "secrets.json")) as f:
     secrets = json.load(f)
 
