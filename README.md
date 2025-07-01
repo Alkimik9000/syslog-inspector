@@ -41,13 +41,11 @@ Activate the virtual environment:
     source venv/bin/activate
 
 ### 2. Install Dependencies
-If a `requirements.txt` file exists, install dependencies with:
+
+A `requirements.txt` file is provided and maintained by the developer.
+To ensure the project runs properly, install all dependencies with:
 
     pip install -r requirements.txt
-
-If `requirements.txt` does not exist, you can generate it after installing your packages:
-
-    pip freeze > requirements.txt
 
 ### 3. Run the Program
 To run the main client script:
