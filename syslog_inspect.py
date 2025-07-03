@@ -1,6 +1,5 @@
 import json
 import subprocess
-import re
 from typing import Dict, Any
 
 def getSyslogSummary() -> Dict[str, Any]:
@@ -13,16 +12,15 @@ def getSyslogSummary() -> Dict[str, Any]:
 
     with open("/var/log/syslog", "r") as file:
         for line in file:
-            line_lower: str = line.lower()
-            severity_match = re.search(r":\s*([a-z]+)", line_lower)
-            if severity_match:
-                severity: str = severity_match.group(1)
-                if severity == "info":
-                    data["info_count"] += 1
-                elif severity.startswith("warn"):
+            line_lower = line.lower()
+            
+            if "." in line_lower and ":" in line_lower:
+                if " warn " in line_lower:
                     data["warn_count"] += 1
-                elif severity == "error":
+                elif " error " in line_lower:
                     data["error_count"] += 1
+                elif " info " in line_lower:
+                    data["info_count"] += 1
 
     return data
 
