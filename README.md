@@ -27,8 +27,6 @@ The local script captures this JSON output over SSH and appends it directly to a
   - `HOST`
   - `USERNAME`
 
-> **IMPORTANT**: There's a `secrets.json` file in the repo (dummy version). You must fill it with your real values.
-
 ## Setting Up and Running the Project
 
 ### 1. Create a Virtual Environment
@@ -51,10 +49,3 @@ To ensure the project runs properly, install all dependencies with:
 To run the main client script:
 
     python client_side.py
-
-### Notes
-- Ensure you are in the project root directory before running these commands.
-- If you are using a different Python version or your venv is named differently, adjust the commands accordingly.
-- If you need to install pip, you can do so with:
-
-    python3 -m ensurepip --upgrade
