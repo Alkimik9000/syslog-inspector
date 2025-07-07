@@ -25,4 +25,4 @@ def getSyslogSummary() -> Dict[str, Any]:
     return data
 
 if __name__ == "__main__":
-    print(json.dumps(getSyslogSummary()))
+    print(json.dumps(getSyslogSummary())) 

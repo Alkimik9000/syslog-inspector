@@ -36,6 +36,7 @@ except json.JSONDecodeError as e:
 print("Appending remote syslog summary to " + LOCAL_CSV_FILE)
 appendToCsv(LOCAL_CSV_FILE, data)
 print("Data appended")
+print("Data has been successfully added to results.csv")
 
 my_ssh.close()
 print("SSH connection closed")
