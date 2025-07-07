@@ -2,6 +2,11 @@ import json
 import subprocess
 from typing import Dict, Any
 
+SEV_WORDS = {"warn": "warn_count",
+             "warning": "warn_count",
+             "error": "error_count",
+             "info": "info_count"}
+
 def getSyslogSummary() -> Dict[str, Any]:
     data: Dict[str, Any] = {
         "server_timestamp": subprocess.check_output(["date", "+%s"]).decode().strip(),
@@ -10,30 +15,26 @@ def getSyslogSummary() -> Dict[str, Any]:
         "error_count": 0
     }
 
-    with open("/var/log/syslog", "r") as file:
+    with open("/var/log/syslog", "r", errors="replace") as file:
         for line in file:
             line_lower = line.lower()
-            
-            # Original approach: look for " severity " anywhere in line
-            if "." in line_lower and ":" in line_lower:
-                if " warn " in line_lower:
-                    data["warn_count"] += 1
-                elif " error " in line_lower:
-                    data["error_count"] += 1
-                elif " info " in line_lower:
-                    data["info_count"] += 1
-                    
-            # Additional check for structured logs: "]: timestamp - SEVERITY -"
-            elif "]: " in line_lower and " - " in line_lower:
+
+            # precise: "program[pid]: … - SEVERITY - …"
+            if "]: " in line_lower and " - " in line_lower:
                 parts = line_lower.split(" - ")
                 if len(parts) >= 2:
                     sev_token = parts[1].strip()
-                    if sev_token in ("warn", "warning"):
-                        data["warn_count"] += 1
-                    elif sev_token == "error":
-                        data["error_count"] += 1
-                    elif sev_token == "info":
-                        data["info_count"] += 1
+                    key = SEV_WORDS.get(sev_token)
+                    if key:
+                        data[key] += 1
+                continue
+
+            # fallback: quick substring scan (no f-string)
+            for word, key in SEV_WORDS.items():
+                pattern = " " + word + " "
+                if pattern in line_lower:
+                    data[key] += 1
+                    break
 
     return data
 
