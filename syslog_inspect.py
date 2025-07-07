@@ -2,7 +2,6 @@ import json
 import subprocess
 from typing import Dict, Any
 
-# maps severity words → the counter key in `data`
 severity_map: Dict[str, str] = {
     "warn": "warn_count",
     "warning": "warn_count",
@@ -22,7 +21,6 @@ def getSyslogSummary() -> Dict[str, Any]:
         for line in file:
             line_lower = line.lower()
 
-            # precise branch: "…]: … - SEVERITY - …"
             if "]: " in line_lower and " - " in line_lower:
                 sev_token = line_lower.split(" - ", 2)[1].strip()
                 counter_key = severity_map.get(sev_token)
@@ -30,7 +28,6 @@ def getSyslogSummary() -> Dict[str, Any]:
                     data[counter_key] += 1
                 continue
 
-            # fallback branch: loose word-boundary scan
             for sev_word, counter_key in severity_map.items():
                 if (" " + sev_word + " ") in line_lower:
                     data[counter_key] += 1
