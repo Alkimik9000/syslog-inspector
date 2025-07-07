@@ -26,6 +26,8 @@ Runs for every other line.
 
 Loops through the known severity words; if the word appears with spaces around it, we count it and break.
 
+This space around the word approach catches system logs while avoiding false positives from paths or compound words (like "warning_handler") since they rarely have spaces on both sides.
+
 Together, this combo nails structured Python logs and plain system logs in one pass.
 
 ### The Word Map
