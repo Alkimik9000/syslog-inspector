@@ -5,7 +5,6 @@ from typing import Dict, Any
 # maps severity words → the counter key in `data`
 severity_map: Dict[str, str] = {
     "warn": "warn_count",
-    "warning": "warn_count",
     "error": "error_count",
     "info": "info_count",
 }
