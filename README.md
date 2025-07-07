@@ -8,29 +8,25 @@ This project connects from your local machine (Mac) to an EC2 Ubuntu server, run
 
 ## How the Script Works
 
-The script uses a smart two-step approach to catch different types of log entries:
+The script uses a two-step approach to catch different types of log entries:
 
-### Step 1: Precise Matching
-First, it looks for logs that follow a specific format with dashes, like:
-```
-2025-07-07 14:22:23,534 - INFO - Starting process...
-2025-07-07 14:22:24,123 - ERROR - Connection failed
-```
+### First step : Precise branch
 
-When it finds this pattern (`]: ... - SEVERITY - ...`), it knows exactly where the severity word is - right between the dashes. This is super accurate for Python logging entries.
+Fires only on lines that contain both "]: " and " - ".
 
-### Step 2: General Search
-If a line doesn't have that dash pattern, the script does a simple word search. It looks for severity words with spaces around them (like ` warn ` or ` error `). This catches other types of logs like:
-```
-2025-07-03 13:58:43.1204 WARN EC2RoleProvider Failed to connect
-```
+Splits once at " - " → grabs the token right after the first dash (info, warn, error).
 
-### Why Two Steps?
-We need both because logs come in different formats:
-- Python apps use the dash format: `- INFO -`
-- System services just put the word directly: `WARN`
+Uses severity_map to pick the right counter and bumps it.
 
-By checking both ways, we catch everything without counting the same line twice (that's why we use `continue` after the first match).
+continue prevents double-counting—once a line matches here, we skip the generic scan.
+
+### Second step: Fallback branch
+
+Runs for every other line.
+
+Loops through the known severity words; if the word appears with spaces around it, we count it and break.
+
+Together, this combo nails structured Python logs and plain system logs in one pass.
 
 ### The Word Map
 At the top of the script, there's a simple dictionary that says "if you find this word, add to this counter":
