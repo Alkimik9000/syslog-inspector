@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script to compare the split approach with the original approach
+Script to compare the improved split approach with the original approach
 """
 from ssh_to_server import SshToServer
 
@@ -12,10 +12,10 @@ def compareApproaches():
         my_ssh = SshToServer()
         print("Connected to remote server")
         
-        # Test the split approach
-        print("\n1. Testing SPLIT APPROACH...")
+        # Test the improved split approach
+        print("\n1. Testing IMPROVED SPLIT APPROACH (using ]: and - SEVERITY -)...")
         split_output = my_ssh.execCommand("python3 syslog_inspect.py")
-        print("=== SPLIT APPROACH OUTPUT ===")
+        print("=== IMPROVED SPLIT APPROACH OUTPUT ===")
         print(split_output)
         
         # Get some sample lines to analyze
@@ -30,22 +30,26 @@ def compareApproaches():
         for i, line in enumerate(lines[-3:], 1):  # Test last 3 lines
             print("Line " + str(i) + ": " + line)
             
-            # Test split approach manually
+            # Test improved split approach manually
             line_lower = line.lower()
-            if ":" in line_lower:
-                msg_after_colon = line_lower.split(":", 1)[1].lstrip()
-                if msg_after_colon.strip():
-                    sev_token = msg_after_colon.split(None, 1)[0]
-                    print("  Split approach - First token after colon: '" + sev_token + "'")
-                    
-                    if sev_token in ("warn", "warning", "error", "info"):
-                        print("  ✅ Would be counted as: " + sev_token)
+            if "]: " in line_lower:
+                msg_after_colon = line_lower.split("]:", 1)[1].lstrip()
+                if msg_after_colon and " - " in msg_after_colon:
+                    parts = msg_after_colon.split(" - ")
+                    if len(parts) >= 2:
+                        sev_token = parts[1].strip()
+                        print("  Improved split - Severity token: '" + sev_token + "'")
+                        
+                        if sev_token in ("warn", "warning", "error", "info"):
+                            print("  ✅ Would be counted as: " + sev_token)
+                        else:
+                            print("  ❌ Would NOT be counted (not a severity token)")
                     else:
-                        print("  ❌ Would NOT be counted (not a severity token)")
+                        print("  ❌ Not enough parts in - SEVERITY - pattern")
                 else:
-                    print("  ❌ No content after colon")
+                    print("  ❌ No - SEVERITY - pattern found")
             else:
-                print("  ❌ No colon found")
+                print("  ❌ No ]: pattern found")
             
             # Test original approach for comparison
             if "." in line_lower and ":" in line_lower:

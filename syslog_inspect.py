@@ -19,21 +19,25 @@ def getSyslogSummary() -> Dict[str, Any]:
                 line_count += 1
                 line_lower = line.lower()
                 
-                # Split approach: Look for severity as first token after colon
-                if ":" in line_lower:
-                    # Everything after the first colon is the actual message
-                    msg_after_colon = line_lower.split(":", 1)[1].lstrip()
-                    
-                    # Grab the very first token of the message
-                    if msg_after_colon.strip():  # Make sure there's content
-                        sev_token = msg_after_colon.split(None, 1)[0]  # None => split on any whitespace
-                        
-                        if sev_token in ("warn", "warning"):
-                            data["warn_count"] += 1
-                        elif sev_token == "error":
-                            data["error_count"] += 1
-                        elif sev_token == "info":
-                            data["info_count"] += 1
+                # Improved split approach: Use the colon that follows the closing bracket ]:
+                if "]: " in line_lower:
+                    msg_after_colon = line_lower.split("]:", 1)[1].lstrip()
+                else:
+                    continue  # can't locate header delimiter, skip
+
+                if msg_after_colon:
+                    # Look for pattern "- SEVERITY -" in the message
+                    if " - " in msg_after_colon:
+                        parts = msg_after_colon.split(" - ")
+                        if len(parts) >= 2:
+                            # The severity should be the second part (between first and second -)
+                            sev_token = parts[1].strip()
+                            if sev_token in ("warn", "warning"):
+                                data["warn_count"] += 1
+                            elif sev_token == "error":
+                                data["error_count"] += 1
+                            elif sev_token == "info":
+                                data["info_count"] += 1
             
             # Debug output to stderr
             print("DEBUG: Processed " + str(line_count) + " lines from syslog", file=sys.stderr)
